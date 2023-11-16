@@ -1,0 +1,28 @@
+@startuml Login
+
+start
+:Login;
+if (Authentication Correct) then
+    partition PreInitStage {
+        :Generate in-game token;
+        :Register Player into in-game queue;
+    }
+    partition JoinStage {
+        :Send token back to player;
+        :Player send Hello world pkt;
+        note right
+            Hello world pkt is the pkt
+            send when a player actually
+            join game with given token.
+        end note
+    }
+    partition InGameStage {
+        :Fire PlayerLoginEvent;
+    }
+    stop
+else
+    :raise Error;
+    stop
+endif
+
+@enduml
