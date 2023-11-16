@@ -1,0 +1,7 @@
+version: "v3"
+
+services:
+  plantuml-server:
+    image: plantuml/plantuml-server:jetty
+    ports:
+    - 8084:8080
