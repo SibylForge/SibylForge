@@ -1,0 +1,31 @@
+@startuml Player
+
+namespace Entity {
+    interface IEntity {
+        +getName(): string
+        +getX(): float
+        +getY(): float
+        +getZ(): float
+        +getWorld(): World
+    }
+
+    class Entity implements IEntity {
+        +name: string
+        +X: float
+        +Y: float
+        +Z: float
+        +world: World
+        +getName(): string
+        +getX(): flaot
+        +getY(): float
+        +getZ(): float
+        +getWorld(): World
+    }
+
+    class Player extends Entity {
+        +account: string
+        +getAccount(): string
+    }
+}
+
+@enduml

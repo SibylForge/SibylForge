@@ -1,0 +1,21 @@
+@startuml Chat
+
+actor Player
+actor OtherPlayers
+participant Server
+|||
+Player -> Server: Send message pkt
+activate Server
+|||
+alt If pkt.type == command
+    Server -> Server: Apply command
+    Server -> Player: send cmd result
+else
+    group Broadcast
+        Server ---> Player: send chat message
+        Server ---> OtherPlayers: send chat message
+    end
+end
+deactivate Server
+|||
+@enduml
