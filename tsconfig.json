@@ -20,6 +20,8 @@
 		"moduleResolution": "node",
 		"paths": {
 			"@/*": ["./src/*"],
+			"@packet/*": ["./src/packet/*"],
+
 			"@event/*": ["./src/event/*"]
 		}
   }

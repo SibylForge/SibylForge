@@ -1,0 +1,27 @@
+@startuml Packet
+
+namespace Packet {
+	abstract class AbstractPacket {
+		+{static} PKT_CONSTANT_NAME: string
+		+isSensitive: boolean
+		+serial: number
+		+identity: any
+		+payload: any
+		+extractHead(data: any): this
+		+freeze(keys?: (keyof this)[]): this
+		+{abstract} extractPayload(): this
+	}
+
+	class AbstractSensitivePacket extends AbstractPacket {
+		+validate(): boolean
+	}
+
+	class PlayerChatPacket extends AbstractSensitivePacket {
+		#message: string
+	}
+
+	class PlayerLoginPacket extends AbstractPacket {}
+	class PlayerLogoutPacket extends AbstractPacket {}
+}
+
+@enduml
