@@ -1,0 +1,23 @@
+@startuml Event
+
+namespace Event {
+    class Event
+
+    class PlayerLoginEvent extends Event {
+        #player: Player
+        +getPlayer(): Player
+    }
+
+    class PlayerLogoutEvent extends Event {
+        #player: Player
+        +getPlayer(): Player
+    }
+
+    class PlayerChatEvent extends Event{
+        #player: Player
+        #message: strting
+        +getPlayer(): Player
+        +getMessage(): string
+    }
+}
+@enduml
