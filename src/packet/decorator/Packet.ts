@@ -3,7 +3,7 @@ import { AbstractPacket } from '@packet/AbstractPacket';
 import { ClientPacket } from '@packet/client/ClientPacket';
 import { ServerPacket } from '@packet/server/ServerPacket';
 
-export function Packet(pktName: string): ClassDecorator {
+export function Packet(namepsace: string, pktName: string): ClassDecorator {
 	return (target: any) => {
 		target.PKT_CONSTANT_NAME = pktName;
 
@@ -13,7 +13,7 @@ export function Packet(pktName: string): ClassDecorator {
 			throw new Error(`Packet ${pktName} should extends ClientPacket or ServerPacket.`);
 		}
 
-		const pkgPath = join(__dirname, '..', isClientPkt ? 'client' : 'server', 'player', target.name)
+		const pkgPath = join(__dirname, '..', isClientPkt ? 'client' : 'server', namepsace, target.name)
 		import (pkgPath).then((module) => {
 			AbstractPacket.mapClass(pktName, module[target.name]);
 		});

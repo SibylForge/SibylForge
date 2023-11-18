@@ -1,7 +1,7 @@
 import { AbstractPacket } from '@packet/AbstractPacket';
 
 export abstract class ServerPacket extends AbstractPacket {
-	formHead(): any {
+	public formHead(): any {
 		const data = {
 			head: {
 				serial: this.serial,

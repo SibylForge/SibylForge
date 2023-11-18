@@ -1,13 +1,16 @@
 import { Packet } from '@packet/decorator/Packet';
 import { CPlayerPacket } from '@packet/client/player/CPlayerPacket';
 
-@Packet('cp-player-chat')
+@Packet('player', 'cp-player-chat')
 export class CPlayerChatPacket extends CPlayerPacket {
-	protected message: string;
+	private message: string;
+
+	public getMessage(): string {
+		return this.message;
+	}
 
 	extractPayload(): CPlayerChatPacket {
 		this.message = this.payload.message;
-		console.log(this.message);
 		return this;
 	}
 }
