@@ -1,8 +1,8 @@
-import { ClientPacket } from '@/packet/client/ClientPacket';
-import { Packet } from '@/packet/decorator/Packet';
+import { Packet } from '@packet/decorator/Packet';
+import { CPlayerPacket } from '@packet/client/player/CPlayerPacket';
 
 @Packet('cp-player-chat')
-export class CPlayerChatPacket extends ClientPacket {
+export class CPlayerChatPacket extends CPlayerPacket {
 	protected message: string;
 
 	extractPayload(): CPlayerChatPacket {

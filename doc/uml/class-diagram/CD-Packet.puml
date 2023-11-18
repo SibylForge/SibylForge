@@ -19,12 +19,25 @@ namespace Packet {
 			+{abstract} extractPayload(): ClientPacket;
 		}
 
-		class CPlayerChatPacket extends ClientPacket {
-			#message: string
+		namespace Net {
+			class CPlayerLoginPacket extends .Packet.Client.ClientPacket {}
+			class CPlayerLogoutPacket extends .Packet.Client.ClientPacket {}
 		}
 
-		class CPlayerLoginPacket extends ClientPacket {}
-		class CPlayerLogoutPacket extends ClientPacket {}
+		namespace Player {
+			class CPlayerPacket extends .Packet.Client.ClientPacket {
+				#identity: string
+				#onlinePlayer: OnlinePlayer
+				+extractHead(data: any): ClientPacket
+				+validate(): boolean
+				+getIdentity(): string
+				-markOnlinePlayer(): void
+			}
+
+			class CPlayerChatPacket extends CPlayerPacket {
+				#message: string
+			}
+		}
 	}
 
 	namespace Server {

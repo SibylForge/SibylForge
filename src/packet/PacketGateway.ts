@@ -5,15 +5,22 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { UUID } from 'crypto';
 import { Socket, Server } from 'socket.io';
+
+import { OnlinePlayer } from '@/entity/OnlinePlayer';
 
 import { AbstractPacket } from './AbstractPacket';
 import { ClientPacket } from './client/ClientPacket';
 import { ServerPacket } from './server/ServerPacket';
 import { SPlayerChatPacket } from './server/player/SPlayerChatPacket';
+import { CNetLoginPacket } from './client/net/CNetLoginPacket';
+import { CNetLogoutPacket } from './client/net/CNetLogoutPacket';
 
 @WebSocketGateway(80, { transports: ['websocket'] })
 export class PacketGateway {
+	public static onlinePlayers: Record<UUID, OnlinePlayer> = {};
+
   @WebSocketServer()
   server: Server;
 
@@ -33,6 +40,14 @@ export class PacketGateway {
 			return;
 		}
 		pkt.extractPayload().freeze();
+
+		if (pkt instanceof CNetLoginPacket) {
+			this.initializeOnlinePlayer(pkt, client);
+		} else if (pkt instanceof CNetLogoutPacket) {
+			this.destroyOnlinePlayer(pkt);
+		}
+		// process pkt in main loop.
+
 		this.sendPacket(client, new SPlayerChatPacket());
   }
 
@@ -42,6 +57,14 @@ export class PacketGateway {
 			pkt,
 		);
 		client.emit('spkt', JSON.stringify(data));
+	}
+
+	private initializeOnlinePlayer(pkt: CNetLoginPacket, socket: Socket): void {
+		const onlinePlayer = OnlinePlayer.fromPacket(pkt, socket);
+		PacketGateway.onlinePlayers[onlinePlayer.getUUID()] = onlinePlayer;
+	}
+
+	private destroyOnlinePlayer(pkt: CNetLogoutPacket): void {
 	}
 
 	private extractPktName(data: any): string | null {

@@ -26,6 +26,14 @@ namespace Entity {
         +account: string
         +getAccount(): string
     }
+
+		class OnlinePlayer {
+			#id: UUID
+			#socket: Socket
+			+{static} fromPacket(pkt: CNetLoginPacket, socket: Socket): OnlinePlayer
+			+getUUID(): UUID
+			+isConnected(): boolean
+		}
 }
 
 @enduml
