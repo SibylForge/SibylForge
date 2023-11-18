@@ -26,6 +26,18 @@ namespace Entity {
         +account: string
         +getAccount(): string
     }
+
+		class OnlinePlayer {
+			#id: UUID
+			#identity: string
+			#name: string
+			#socket: Socket
+			+constructor(identity: string, name: string, socket: Socket)
+			+getUUID(): UUID
+			+getName(): string
+			+getUUID(): UUID
+			+isConnected(): boolean
+		}
 }
 
 @enduml

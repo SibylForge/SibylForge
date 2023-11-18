@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socket.IO Chat</title>
+</head>
+<body>
+  <div id="login-container">
+    <label for="username">Username:</label>
+    <input type="text" id="username" />
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="chat-container" style="display:none;">
+    <div id="messages"></div>
+    <input type="text" id="message" />
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="logout()">Logout</button>
+		<div id="list"></div>
+  </div>
+
+	<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+  <script>
+    const socket = io('ws://127.0.0.1:80');
+		let list = {};
+		let uuid = '';
+		let identity = '';
+
+    function login() {
+      const username = document.getElementById('username').value;
+      socket.emit('pkt', JSON.stringify({
+				pkt_name: "cp-net-login",
+				head: {
+					serial: 12
+				},
+				payload: {
+					account: username,
+					name: username,
+				}
+			}));
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('chat-container').style.display = 'block';
+    }
+
+    function logout() {
+      socket.emit('logout');
+      document.getElementById('login-container').style.display = 'block';
+      document.getElementById('chat-container').style.display = 'none';
+    }
+
+    function sendMessage() {
+      const message = document.getElementById('message').value;
+      socket.emit('pkt', JSON.stringify({
+				pkt_name: "cp-player-chat",
+				identity,
+				head: {
+					serial: 12
+				},
+				payload: {
+					message
+				}
+			}));
+      document.getElementById('message').value = '';
+    }
+
+		function listRes(data) {
+			const listContainer = document.getElementById('list');
+			list = data['payload'];
+			listContainer.innerHTML = '';
+			Object.keys(list).forEach((key) => {
+				listContainer.innerHTML += `${list[key]}<br />`;
+			});
+		}
+
+		function loginRes(data) {
+			uuid = data['payload']['uuid'];
+			identity = data['payload']['identity'];
+			sendMessageToChatBox(`Your UUID is ${uuid}`);
+		}
+
+		function chatRes(data) {
+			const from = data['payload']['from'];
+			const message = data['payload']['message'];
+			sendMessageToChatBox(`[${list[from]}] ${message}`);
+		}
+
+		function sendMessageToChatBox(msg) {
+      document.getElementById('messages').innerHTML += `${msg}<br />`;
+		}
+
+    socket.on('spkt', (rawData) => {
+			const data = JSON.parse(rawData);
+			const { pkt_name } = data;
+			switch (pkt_name) {
+				case 'sp-net-login':
+					return loginRes(data);
+				case 'sp-net-list':
+					return listRes(data);
+				case 'sp-player-chat':
+					return chatRes(data);
+			}
+
+    });
+  </script>
+</body>
+</html>
