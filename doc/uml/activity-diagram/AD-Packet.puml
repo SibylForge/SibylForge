@@ -1,0 +1,17 @@
+@startuml Packet
+
+start
+:Packet Recieve;
+:Extract pkt head;
+if (Is Sensitive Pkt?) is (true) then
+	#palegreen:Pkt validate procedure;
+	if (Invalid pkt?) is (true) then
+		#pink:Process invalid pkt;
+		kill
+	endif
+endif
+:Packet payload extract;
+:Event Construct;
+stop
+
+@enduml

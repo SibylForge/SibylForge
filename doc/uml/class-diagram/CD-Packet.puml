@@ -1,0 +1,94 @@
+@startuml Packet
+
+namespace Packet {
+	abstract class AbstractPacket {
+		+{static} pktMapping: Record<string, Class>;
+		+{static} PKT_CONSTANT_NAME: string
+		+socketId: string
+		+serial: number
+		+payload: any
+		+{static} mapClass(name: string, value: Class): void
+		+{static} getClass(name: string): Class
+		+{static} isSensitive(clazz: Class): boolean
+		+freeze(keys?: (keyof this)[]): this
+	}
+
+	class PacketGateway {
+		#{static} connectedSockets: Record<UUID, OnlinePlayer>;
+		+onPackets(rawData: any, client: Socket): void
+		+sendPacket(pkt: ServerPacket, socket: Socket): void
+		-pktShouldQuickAbort(pkt: AbstractPacket, socket: Socket): boolean
+		-broadcast(pkt: ServerPacket): void
+		-generateIdentity(account: string, socket: Socket): string
+		-initializeOnlinePlayer(pkt: CNetLoginPacket, socket: Socket): void
+		-destroyOnlinePlayer(pkt: CNetLogoutPacket, socket: Socket): void
+		-extractPktName(data: any): string | null
+		-formPktName(data: any, pkt: ServerPacket): any
+	}
+
+	namespace Client {
+		abstract class ClientPacket extends .Packet.AbstractPacket {
+			#identity: string
+			+validate(): boolean
+			+extractHead(data: any): ClientPacket;
+			+{abstract} extractPayload(): ClientPacket;
+		}
+
+		namespace Net {
+			class CNetLoginPacket extends .Packet.Client.ClientPacket {
+				-account: string
+				-name: string
+				+constructor(account: string, name: string)
+				+getAccount(): string
+				+getName(): string
+				+extractPayload(): CNetLoginPacket
+			}
+
+			class CNetLogoutPacket extends .Packet.Client.ClientPacket {
+				+extractPayload(): CNetLogoutPacket
+			}
+		}
+
+		namespace Player {
+			class CPlayerPacket extends .Packet.Client.ClientPacket {}
+
+			class CPlayerChatPacket extends CPlayerPacket {
+				-message: string
+				+getMessage(): string
+				+extractPayload(): CPlayerChatPacket
+			}
+		}
+	}
+
+	namespace Server {
+		abstract class ServerPacket extends .Packet.AbstractPacket {
+			+formHead(): any
+			+{abstract} formPayload(): ServerPacket
+		}
+
+		namespace Net {
+			class SNetListPacket extends .Packet.Server.ServerPacket {
+				-list: Record<string, OnlinePlayer>
+				+constructor(list: Record<string, OnlinePlayer>)
+				+formPayload(): ServerPacket
+			}
+
+			class SNetLoginPacket extends .Packet.Server.ServerPacket {
+				-isSuccess: boolean
+				-uuid: string
+				- identity: string
+				+constructor(isSuccess: boolean, uuid: string, identity: string)
+				+formPayload(): ServerPacket
+			}
+		}
+
+		class SPlayerChatPacket extends ServerPacket {
+			-from: string
+			-message: string
+			+constructor(from: string, message: string)
+			+formPayload(): ServerPacket
+		}
+	}
+}
+
+@enduml
