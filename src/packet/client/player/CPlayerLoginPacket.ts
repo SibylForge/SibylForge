@@ -1,9 +1,9 @@
 import { ClientPacket } from '@/packet/client/ClientPacket';
 import { Packet } from '@/packet/decorator/Packet';
 
-@Packet('pkt-player-login')
-export class PlayerLoginPacket extends ClientPacket {
-	extractPayload(): PlayerLoginPacket {
+@Packet('cp-player-login')
+export class CPlayerLoginPacket extends ClientPacket {
+	extractPayload(): CPlayerLoginPacket {
 		return this;
 	}
 }

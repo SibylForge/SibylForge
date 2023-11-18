@@ -9,6 +9,8 @@ import { Socket, Server } from 'socket.io';
 
 import { AbstractPacket } from './AbstractPacket';
 import { ClientPacket } from './client/ClientPacket';
+import { ServerPacket } from './server/ServerPacket';
+import { SPlayerChatPacket } from './server/player/SPlayerChatPacket';
 
 @WebSocketGateway(80, { transports: ['websocket'] })
 export class PacketGateway {
@@ -31,7 +33,16 @@ export class PacketGateway {
 			return;
 		}
 		pkt.extractPayload().freeze();
+		this.sendPacket(client, new SPlayerChatPacket());
   }
+
+	sendPacket(client: Socket, pkt: ServerPacket) {
+		const data = this.formPktName(
+			pkt.formPayload().formHead(),
+			pkt,
+		);
+		client.emit('spkt', JSON.stringify(data));
+	}
 
 	private extractPktName(data: any): string | null {
 		let pktName: string = data['pkt_name'];
@@ -39,5 +50,18 @@ export class PacketGateway {
 			return null;
 		}
 		return pktName;
+	}
+
+	private formPktName(data: any, pkt: ServerPacket): any {
+		const pktName = pkt.constructor['PKT_CONSTANT_NAME'];
+		if (!pktName) {
+			return data;
+		}
+		const newData = {
+			pkt_name: pktName,
+			...data,
+		};
+		Object.freeze(newData);
+		return newData;
 	}
 }
