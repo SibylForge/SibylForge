@@ -1,16 +1,21 @@
 export abstract class AbstractPacket {
+	public static pktMapping: Record<string, any> = {};
+
 	public static readonly PKT_CONSTANT_NAME: string;
 	public serial: number;
 	public payload: any;
 
-	extractHead(data: any): AbstractPacket {
-		this.serial = data['head']['serial'];
-		this.payload = data['payload'];
-
-		return this.freeze(['serial', 'payload']);
+	public static mapClass(name: string, value: any): void {
+		this.pktMapping[name] = value;
 	}
 
-	abstract extractPayload(): AbstractPacket;
+	public static getClass(name: string): any {
+		return this.pktMapping[name];
+	}
+
+	public static isSensitive(clazz: any): boolean {
+		return Reflect.hasMetadata('IS_SENSITIVE', clazz) && Reflect.getMetadata('IS_SENSITIVE', clazz);
+	}
 
 	public freeze(keys?: (keyof AbstractPacket)[]): AbstractPacket {
 		if (keys) {

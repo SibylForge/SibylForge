@@ -2,26 +2,34 @@
 
 namespace Packet {
 	abstract class AbstractPacket {
+		+{static} pktMapping: Record<string, Class>;
 		+{static} PKT_CONSTANT_NAME: string
-		+isSensitive: boolean
 		+serial: number
-		+identity: any
 		+payload: any
-		+extractHead(data: any): this
+		+{static} mapClass(name: string, value: Class): void
+		+{static} getClass(name: string): Class
+		+{static} isSensitive(clazz: Class): boolean
 		+freeze(keys?: (keyof this)[]): this
-		+{abstract} extractPayload(): this
 	}
 
-	class AbstractSensitivePacket extends AbstractPacket {
-		+validate(): boolean
+	namespace Client {
+		abstract class ClientPacket extends .Packet.AbstractPacket {
+			+validate(): boolean
+			+extractHead(data: any): ClientPacket;
+			+{abstract} extractPayload(): ClientPacket;
+		}
+
+		class PlayerChatPacket extends ClientPacket {
+			#message: string
+		}
+
+		class PlayerLoginPacket extends ClientPacket {}
+		class PlayerLogoutPacket extends ClientPacket {}
 	}
 
-	class PlayerChatPacket extends AbstractSensitivePacket {
-		#message: string
+	namespace Server {
+		abstract class ServerPacket extends .Packet.AbstractPacket {}
 	}
-
-	class PlayerLoginPacket extends AbstractPacket {}
-	class PlayerLogoutPacket extends AbstractPacket {}
 }
 
 @enduml
