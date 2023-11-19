@@ -1,0 +1,67 @@
+name: Test on Push
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  test:
+    name: Testing
+    strategy:
+      matrix:
+        node-version: ['lts/hydrogen']
+        os: [ubuntu-latest]
+        typescript-version: [4.2]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Set resolutions to correct typescript version
+        uses: jossef/action-set-json-field@v2
+        with:
+          file: package.json
+          field: resolutions
+          value: "{ \"typescript\": \"${{ matrix.typescript-version }}\"}"
+          parse_json: true
+
+      - name: Install
+        run: |
+          yarn install --ignore-scripts --netwrok-timeout 100000
+
+      - name: Output ts version
+        run: yarn tsc --version
+
+      - name: Output packages version
+        run: yarn list
+
+      # - name: Unit Testing
+      #   run: yarn run test --coverage
+
+      # - name: Upload UnitTest coverage reports to Codecov
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     move_coverage_to_trash: true
+      #     name: unit
+      #     flags: unit
+
+      - name: E2E Testing
+        run: yarn run test:e2e --coverage --runInBand
+
+      - name: Upload e2eTest coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          move_coverage_to_trash: true
+          name: e2e
+          flags: e2e
