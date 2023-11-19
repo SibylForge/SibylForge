@@ -18,7 +18,7 @@ import { NetPacketHandler } from './handler/net/NetPacketHandler';
 import { PlayerPacketHandler } from './handler/player/PlayerPacketHandler';
 import { CNetPacket } from './client/net/CNetPacket';
 
-@WebSocketGateway(80, { cors: true })
+@WebSocketGateway({ cors: true })
 export class PacketGateway implements OnGatewayDisconnect {
 	constructor(
 		private readonly packetService: PacketService,
