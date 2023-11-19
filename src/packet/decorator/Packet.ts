@@ -1,7 +1,8 @@
 import { join } from 'path';
-import { AbstractPacket } from '@packet/AbstractPacket';
-import { ClientPacket } from '@packet/client/ClientPacket';
-import { ServerPacket } from '@packet/server/ServerPacket';
+
+import { AbstractPacket } from '@/packet/AbstractPacket';
+import { ClientPacket } from '@/packet/client/ClientPacket';
+import { ServerPacket } from '@/packet/server/ServerPacket';
 
 export function Packet(namepsace: string, pktName: string): ClassDecorator {
 	return (target: any) => {

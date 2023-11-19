@@ -7,14 +7,12 @@
 </head>
 <body>
   <div id="login-container">
-    <label for="username">Username:</label>
-    <input type="text" id="username" />
-    <button onclick="login()">Login</button>
-  </div>
-
-  <div id="chat-container" style="display:none;">
     <div id="messages"></div>
+    <label for="username">Username:</label>
+    <input type="text" id="username" /><br />
+    <label for="username">Message:</label>
     <input type="text" id="message" />
+    <button onclick="login()">Login</button>
     <button onclick="sendMessage()">Send</button>
     <button onclick="logout()">Logout</button>
 		<div id="list"></div>
@@ -29,7 +27,7 @@
 
     function login() {
       const username = document.getElementById('username').value;
-      socket.emit('pkt', JSON.stringify({
+      socket.emit('pkt-net', JSON.stringify({
 				pkt_name: "cp-net-login",
 				head: {
 					serial: 12
@@ -39,19 +37,21 @@
 					name: username,
 				}
 			}));
-      document.getElementById('login-container').style.display = 'none';
-      document.getElementById('chat-container').style.display = 'block';
     }
 
     function logout() {
-      socket.emit('logout');
-      document.getElementById('login-container').style.display = 'block';
-      document.getElementById('chat-container').style.display = 'none';
+      socket.emit('pkt-net', JSON.stringify({
+				pkt_name: "cp-net-logout",
+				head: {
+					serial: 12
+				},
+				payload: {},
+			}));
     }
 
     function sendMessage() {
       const message = document.getElementById('message').value;
-      socket.emit('pkt', JSON.stringify({
+      socket.emit('pkt-player', JSON.stringify({
 				pkt_name: "cp-player-chat",
 				identity,
 				head: {
@@ -91,6 +91,7 @@
 
     socket.on('spkt', (rawData) => {
 			const data = JSON.parse(rawData);
+			console.log(data);
 			const { pkt_name } = data;
 			switch (pkt_name) {
 				case 'sp-net-login':

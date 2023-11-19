@@ -1,8 +1,9 @@
-import { ClientPacket } from '@packet/client/ClientPacket';
-import { Packet } from '@packet/decorator/Packet';
+import { Packet } from '@/packet/decorator/Packet';
+
+import { CNetPacket } from './CNetPacket';
 
 @Packet('net', 'cp-net-login')
-export class CNetLoginPacket extends ClientPacket {
+export class CNetLoginPacket extends CNetPacket {
 	private account: string;
 	private name: string;
 

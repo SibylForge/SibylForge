@@ -1,5 +1,6 @@
-import { Packet } from '@packet/decorator/Packet';
-import { CPlayerPacket } from '@packet/client/player/CPlayerPacket';
+import { Packet } from '@/packet/decorator/Packet';
+
+import { CPlayerPacket } from './CPlayerPacket';
 
 @Packet('player', 'cp-player-chat')
 export class CPlayerChatPacket extends CPlayerPacket {

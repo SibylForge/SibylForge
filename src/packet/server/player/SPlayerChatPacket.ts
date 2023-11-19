@@ -1,6 +1,5 @@
-import { OnlinePlayer } from '@/entity/OnlinePlayer';
-import { Packet } from '@packet/decorator/Packet';
-import { ServerPacket } from '@packet/server/ServerPacket';
+import { Packet } from '@/packet/decorator/Packet';
+import { ServerPacket } from '@/packet/server/ServerPacket';
 
 @Packet('player', 'sp-player-chat')
 export class SPlayerChatPacket extends ServerPacket {

@@ -4,7 +4,6 @@ namespace Packet {
 	abstract class AbstractPacket {
 		+{static} pktMapping: Record<string, Class>;
 		+{static} PKT_CONSTANT_NAME: string
-		+socketId: string
 		+serial: number
 		+payload: any
 		+{static} mapClass(name: string, value: Class): void
@@ -14,15 +13,22 @@ namespace Packet {
 	}
 
 	class PacketGateway {
-		#{static} connectedSockets: Record<UUID, OnlinePlayer>;
+		-handlers: Array<TrafficHandler>
 		+onPackets(rawData: any, client: Socket): void
-		+sendPacket(pkt: ServerPacket, socket: Socket): void
+		+handleDisconnect(client: Socket): void
 		-pktShouldQuickAbort(pkt: AbstractPacket, socket: Socket): boolean
-		-broadcast(pkt: ServerPacket): void
-		-generateIdentity(account: string, socket: Socket): string
-		-initializeOnlinePlayer(pkt: CNetLoginPacket, socket: Socket): void
-		-destroyOnlinePlayer(pkt: CNetLogoutPacket, socket: Socket): void
 		-extractPktName(data: any): string | null
+	}
+
+	class PacketService {
+		-connectedSockets: Record<string, Socket>
+		+sendPacket(pkt: ServerPacket, socket: Socket): void
+		+getConnectedSockets(): Record<string, Socket>
+		+getOnlinePlayer(socketId: string): OnlinePlayer
+		+addOnlinePlayer(socketId: string, player: OnlinePlayer): void
+		+removeOnlinePlayer(socketId: string): void
+		+isConnectedSocket(socketId: string): boolean
+		+broadcast(pkt: ServerPacket): void
 		-formPktName(data: any, pkt: ServerPacket): any
 	}
 
@@ -35,7 +41,9 @@ namespace Packet {
 		}
 
 		namespace Net {
-			class CNetLoginPacket extends .Packet.Client.ClientPacket {
+			class CNetPacket extends .Packet.Client.ClientPacket {}
+
+			class CNetLoginPacket extends CNetPacket {
 				-account: string
 				-name: string
 				+constructor(account: string, name: string)
@@ -44,7 +52,7 @@ namespace Packet {
 				+extractPayload(): CNetLoginPacket
 			}
 
-			class CNetLogoutPacket extends .Packet.Client.ClientPacket {
+			class CNetLogoutPacket extends CNetPacket {
 				+extractPayload(): CNetLogoutPacket
 			}
 		}
@@ -82,11 +90,50 @@ namespace Packet {
 			}
 		}
 
-		class SPlayerChatPacket extends ServerPacket {
-			-from: string
-			-message: string
-			+constructor(from: string, message: string)
-			+formPayload(): ServerPacket
+		namespace Player {
+			class SPlayerChatPacket extends .Packet.Server.ServerPacket {
+				-from: string
+				-message: string
+				+constructor(from: string, message: string)
+				+formPayload(): ServerPacket
+			}
+		}
+	}
+
+	namespace Handler {
+		interface TrafficHandler {
+			+canHandle(pkt: AbstractPacket): boolean
+			+handle(packet: AbstractPacket, socket: Socket): void
+		}
+
+		namespace Net {
+			class NetPacketHandler implements .Packet.Handler.TrafficHandler {
+				constructor(\n\
+	loginPacketHandler LoginPacketHandler,\n\
+	logoutPachetHandler LogoutPachetHandler,
+	)
+			}
+
+			class LoginPacketHandler implements .Packet.Handler.TrafficHandler {
+				constructor(\n\
+	packetService: PacketService,\n\
+	netService: NetService,\n\
+	)
+			}
+
+			class LogoutPacketHandler implements .Packet.Handler.TrafficHandler {
+			constructor(packetService: PacketService)
+			}
+		}
+
+		namespace Player {
+			class PlayerPacketHandler implements .Packet.Handler.TrafficHandler {
+				constructor(chatPacketHandler: ChatPacketHandler)
+			}
+
+			class ChatPacketHandler implements .Packet.Handler.TrafficHandler {
+				constructor(packetService: PacketService)
+			}
 		}
 	}
 }
