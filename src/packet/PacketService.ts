@@ -7,11 +7,11 @@ import { OnlinePlayer } from '@/entity/OnlinePlayer';
 import { ServerPacket } from './server/ServerPacket';
 
 @Injectable()
-export class PacketService{
+export class PacketService {
 	public uuid = randomUUID();
 	private connectedSockets: Record<string, OnlinePlayer> = {};
 
-	sendPacket(pkt: ServerPacket, socket: Socket) {
+	public sendPacket(pkt: ServerPacket, socket: Socket): void {
 		const data = this.formPktName(
 			pkt.formPayload().formHead(),
 			pkt,

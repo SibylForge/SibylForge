@@ -14,30 +14,22 @@ import { ClientPacket } from './client/ClientPacket';
 import { CNetLoginPacket } from './client/net/CNetLoginPacket';
 import { CNetLogoutPacket } from './client/net/CNetLogoutPacket';
 import { CPlayerPacket } from './client/player/CPlayerPacket';
-import { TrafficHandler } from './handler/TrafficHandler';
 import { NetPacketHandler } from './handler/net/NetPacketHandler';
 import { PlayerPacketHandler } from './handler/player/PlayerPacketHandler';
+import { CNetPacket } from './client/net/CNetPacket';
 
 @WebSocketGateway(80, { cors: true })
 export class PacketGateway implements OnGatewayDisconnect {
-	private handlers: Array<TrafficHandler> = [];
-
 	constructor(
 		private readonly packetService: PacketService,
 		private readonly netPacketHandler: NetPacketHandler,
 		private readonly playerPacketHandler: PlayerPacketHandler,
-	) {
-		this.handlers = [
-			netPacketHandler,
-			playerPacketHandler,
-		];
-	}
+	) {}
 
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('pkt')
-  onPackets(@MessageBody() rawData: any, @ConnectedSocket() client: Socket) {
+  onPackets<T>(rawData: any, client: Socket): T | null {
 		const data = JSON.parse(rawData);
 		Object.freeze(data);
 
@@ -49,18 +41,32 @@ export class PacketGateway implements OnGatewayDisconnect {
 		let pkt: ClientPacket = new pktClass().extractHead(data)
 		if (this.pktShouldQuickAbort(pkt, client) || isSensitive && !pkt.validate()) {
 			// pkt burn out.
+			return null;
+		}
+		return pkt.extractPayload().freeze() as T;
+  }
+
+	@SubscribeMessage('pkt-net')
+	onNetPackets(@MessageBody() rawData: any, @ConnectedSocket() client: Socket) {
+		const pkt: CNetPacket = this.onPackets<CNetPacket>(rawData, client);
+		const canHandle = this.netPacketHandler.canHandle(pkt);
+		if (!pkt || !canHandle) {
 			return;
 		}
-		pkt.extractPayload().freeze();
 
-		for (let handler of this.handlers) {
-			if (handler.canHandle(pkt)) {
-				handler.handle(pkt, client);
-				return;
-			}
+		this.netPacketHandler.handle(pkt, client);
+	}
+
+	@SubscribeMessage('pkt-player')
+	onPlayerPackets(@MessageBody() rawData: any, @ConnectedSocket() client: Socket) {
+		const pkt: CPlayerPacket = this.onPackets<CPlayerPacket>(rawData, client);
+		const canHandle = this.playerPacketHandler.canHandle(pkt);
+		if (!pkt || !canHandle) {
+			return;
 		}
-		// Miss process pkts.
-  }
+
+		this.playerPacketHandler.handle(pkt, client);
+	}
 
 	handleDisconnect(client: Socket) {
 		this.packetService.removeOnlinePlayer(client.id);

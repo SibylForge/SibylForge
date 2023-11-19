@@ -27,7 +27,7 @@
 
     function login() {
       const username = document.getElementById('username').value;
-      socket.emit('pkt', JSON.stringify({
+      socket.emit('pkt-net', JSON.stringify({
 				pkt_name: "cp-net-login",
 				head: {
 					serial: 12
@@ -40,7 +40,7 @@
     }
 
     function logout() {
-      socket.emit('pkt', JSON.stringify({
+      socket.emit('pkt-net', JSON.stringify({
 				pkt_name: "cp-net-logout",
 				head: {
 					serial: 12
@@ -51,7 +51,7 @@
 
     function sendMessage() {
       const message = document.getElementById('message').value;
-      socket.emit('pkt', JSON.stringify({
+      socket.emit('pkt-player', JSON.stringify({
 				pkt_name: "cp-player-chat",
 				identity,
 				head: {
