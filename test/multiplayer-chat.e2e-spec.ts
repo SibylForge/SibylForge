@@ -1,21 +1,32 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { io } from 'socket.io-client';
 import { expect } from 'chai';
 
 import { PacketModule } from '@/packet/PacketModule';
+import { SocketIoAdapter } from '@/packet/SocketIoAdapter';
 
 import { SocketClient } from './socket-client';
 
 describe('Multiplayer Chat Test', () => {
   let app: INestApplication;
+	let configService: ConfigService<{
+		WEBSOCKET_PORT: number;
+	}>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-			imports: [PacketModule],
+			imports: [
+				ConfigModule.forRoot({ envFilePath: '.e2e.test.env'}),
+				PacketModule,
+			],
     }).compile();
 
     app = moduleFixture.createNestApplication();
+		configService = app.get(ConfigService);
+		app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
+
     await app.init();
   });
 
@@ -28,7 +39,7 @@ describe('Multiplayer Chat Test', () => {
     const socketClients: Array<SocketClient> = [];
 
 		for (let i = 0; i < numPlayers; i++) {
-			const socket = io('ws://127.0.0.1:80', {
+			const socket = io(`ws://127.0.0.1:${configService.get('WEBSOCKET_PORT')}`, {
 				reconnection: false,
 				forceNew: true,
 			});
