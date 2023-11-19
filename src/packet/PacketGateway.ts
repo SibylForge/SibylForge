@@ -1,6 +1,7 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -18,7 +19,7 @@ import { NetPacketHandler } from './handler/net/NetPacketHandler';
 import { PlayerPacketHandler } from './handler/player/PlayerPacketHandler';
 
 @WebSocketGateway(80, { cors: true })
-export class PacketGateway {
+export class PacketGateway implements OnGatewayDisconnect {
 	private handlers: Array<TrafficHandler> = [];
 
 	constructor(
@@ -26,8 +27,10 @@ export class PacketGateway {
 		private readonly netPacketHandler: NetPacketHandler,
 		private readonly playerPacketHandler: PlayerPacketHandler,
 	) {
-		this.handlers.push(netPacketHandler);
-		this.handlers.push(playerPacketHandler);
+		this.handlers = [
+			netPacketHandler,
+			playerPacketHandler,
+		];
 	}
 
   @WebSocketServer()
@@ -56,7 +59,12 @@ export class PacketGateway {
 				return;
 			}
 		}
+		// Miss process pkts.
   }
+
+	handleDisconnect(client: Socket) {
+		this.packetService.removeOnlinePlayer(client.id);
+	}
 
 	private pktShouldQuickAbort(pkt: AbstractPacket, socket: Socket): boolean {
 		let abortFlag = false;

@@ -5,5 +5,5 @@ import { AbstractPacket } from '@/packet/AbstractPacket';
 export interface TrafficHandler {
 	canHandle(pkt: AbstractPacket): boolean;
 
-	handle(pkt: AbstractPacket, socket: Socket): void;
+	handle(packet: AbstractPacket, socket: Socket): void;
 }

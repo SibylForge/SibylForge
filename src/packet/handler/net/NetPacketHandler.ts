@@ -6,6 +6,7 @@ import { TrafficHandler } from '@/packet/handler/TrafficHandler';
 import { CNetPacket } from '@/packet/client/net/CNetPacket';
 
 import { LoginPacketHandler } from './LoginPacketHandler';
+import { LogoutPacketHandler } from './LogoutPacketHandler';
 
 @Injectable()
 export class NetPacketHandler implements TrafficHandler {
@@ -13,8 +14,12 @@ export class NetPacketHandler implements TrafficHandler {
 
 	constructor(
 		private readonly loginPacketHandler: LoginPacketHandler,
+		private readonly logoutPacketHandler: LogoutPacketHandler,
 	) {
-		this.handlers.push(loginPacketHandler);
+		this.handlers = [
+			loginPacketHandler,
+			logoutPacketHandler,
+		];
 	}
 
 	canHandle(pkt: AbstractPacket): boolean {

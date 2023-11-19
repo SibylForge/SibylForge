@@ -14,7 +14,9 @@ export class PlayerPacketHandler implements TrafficHandler {
 	constructor(
 		private readonly chatPacketHandler: ChatPacketHandler,
 	) {
-		this.handlers.push(chatPacketHandler);
+		this.handlers = [
+			chatPacketHandler,
+		];
 	}
 
 	canHandle(pkt: AbstractPacket): boolean {

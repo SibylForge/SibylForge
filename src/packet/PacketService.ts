@@ -31,6 +31,11 @@ export class PacketService{
 		this.connectedSockets[socketId] = player;
 	}
 
+	public removeOnlinePlayer(socketId: string): void {
+		delete this.connectedSockets[socketId];
+		// Recycle everything from main loop;
+	}
+
 	public isConnectedSocket(socketId: string): boolean {
 		return this.getOnlinePlayer(socketId) !== undefined;
 	}

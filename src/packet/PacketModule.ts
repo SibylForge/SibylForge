@@ -9,6 +9,7 @@ import { NetPacketHandler } from './handler/net/NetPacketHandler';
 import { LoginPacketHandler } from './handler/net/LoginPacketHandler';
 import { PlayerPacketHandler } from './handler/player/PlayerPacketHandler';
 import { ChatPacketHandler } from './handler/player/ChatPacketHandler';
+import { LogoutPacketHandler } from './handler/net/LogoutPacketHandler';
 
 @Module({
 	providers: [
@@ -19,6 +20,7 @@ import { ChatPacketHandler } from './handler/player/ChatPacketHandler';
 
 		NetPacketHandler,
 		LoginPacketHandler,
+		LogoutPacketHandler,
 		PlayerPacketHandler,
 		ChatPacketHandler,
 	],
