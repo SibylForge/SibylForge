@@ -15,4 +15,4 @@
 | payload.message | String | 聊天訊息 |
 
 ## 相關
-- CPlayerChatPacket
+- 請參考 [CPlayerChatPacket](./CPlayerChatPacket.md)

@@ -16,4 +16,4 @@
 | payload.identity | String | Credential | 後續所有請求所需的Token |
 
 ## 相關
-- CNetLoginPacket
+- 請參考 [CNetLoginPacket](./CNetLoginPacket.md)

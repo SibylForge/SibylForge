@@ -16,4 +16,4 @@
 *表示必要
 
 ### 回應結構
-- 請參考 SNetLoginPacket
+- 請參考 [SNetLoginPacket](./SNetLoginPacket.md)
