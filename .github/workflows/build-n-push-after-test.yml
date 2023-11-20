@@ -11,7 +11,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE: SibylForge/SibylForge
+  IMAGE: sibylforge/sibylforge
 
 jobs:
   build:
