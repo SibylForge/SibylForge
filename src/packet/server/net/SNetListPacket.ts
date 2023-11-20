@@ -1,6 +1,7 @@
-import { Packet } from "@/packet/decorator/Packet";
-import { ServerPacket } from "../ServerPacket";
-import { OnlinePlayer } from "@/entity/OnlinePlayer";
+import { Packet } from '@/packet/decorator/Packet';
+import { OnlinePlayer } from '@/entity/OnlinePlayer';
+
+import { ServerPacket } from '../ServerPacket';
 
 @Packet('net', 'sp-net-list')
 export class SNetListPacket extends ServerPacket {

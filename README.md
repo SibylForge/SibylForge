@@ -12,3 +12,4 @@
 
 ## Docs
 - [System Analysis](./doc/uml/README.md)
+- [Packet Structure](./doc/pkt_structure/): doc/pkt_structure/
