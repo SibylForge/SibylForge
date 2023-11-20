@@ -1,5 +1,6 @@
-import { Packet } from "@/packet/decorator/Packet";
-import { ServerPacket } from "../ServerPacket";
+import { Packet } from '@/packet/decorator/Packet';
+
+import { ServerPacket } from '../ServerPacket';
 
 @Packet('net', 'sp-net-login')
 export class SNetLoginPacket extends ServerPacket {
