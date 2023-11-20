@@ -1,0 +1,25 @@
+@startuml AuthService
+left to right direction
+
+actor Player
+actor Database as DB
+
+package AuthService {
+    usecase Register
+    usecase EmailVerification
+    Register ..> EmailVerification : <<include>>
+    EmailVerification <-- DB
+
+    usecase Login
+    usecase Authentication
+    Login ..> Authentication : <<include>>
+
+    usecase Logout
+    Authentication <-- DB
+}
+
+Player --> Login
+Player --> Logout
+Player --> Register
+
+@enduml

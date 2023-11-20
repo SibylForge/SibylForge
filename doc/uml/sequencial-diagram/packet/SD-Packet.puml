@@ -1,0 +1,25 @@
+@startuml Packet
+autoactivate on
+actor Player
+participant PacketGateway
+participant Packet
+participant EventGateway
+
+Player --> PacketGateway : Packet
+activate PacketGateway
+PacketGateway -> Packet ** : 1. Extract pkt head
+alt isSensitive and valid pkt
+	|||
+	PacketGateway -> Packet : 2. Extract pkt payload
+	PacketGateway -> EventGateway : 3. Determine event
+	EventGateway -> EventGateway: 4. Emit relative event
+	deactivate EventGateway
+	deactivate EventGateway
+	|||
+else
+	|||
+	PacketGateway -> Packet !!: 2. Burn out pkt
+	|||
+end
+|||
+@enduml

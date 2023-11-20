@@ -1,0 +1,9 @@
+@startuml Logout
+
+start
+:Logout;
+:Freeze Player(logging out flag);
+:Save Player data;
+end
+
+@enduml

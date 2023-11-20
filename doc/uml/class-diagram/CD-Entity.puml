@@ -1,0 +1,43 @@
+@startuml Player
+
+namespace Entity {
+    interface IEntity {
+        +getName(): string
+        +getX(): float
+        +getY(): float
+        +getZ(): float
+        +getWorld(): World
+    }
+
+    class Entity implements IEntity {
+        +name: string
+        +X: float
+        +Y: float
+        +Z: float
+        +world: World
+        +getName(): string
+        +getX(): flaot
+        +getY(): float
+        +getZ(): float
+        +getWorld(): World
+    }
+
+    class Player extends Entity {
+        +account: string
+        +getAccount(): string
+    }
+
+		class OnlinePlayer {
+			#id: UUID
+			#identity: string
+			#name: string
+			#socket: Socket
+			+constructor(identity: string, name: string, socket: Socket)
+			+getUUID(): UUID
+			+getName(): string
+			+getUUID(): UUID
+			+isConnected(): boolean
+		}
+}
+
+@enduml
