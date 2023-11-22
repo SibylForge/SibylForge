@@ -8,15 +8,15 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
-import { PacketService } from './PacketService';
+import { PacketService } from './packet.service';
 import { AbstractPacket } from './AbstractPacket';
 import { ClientPacket } from './client/ClientPacket';
+import { CNetPacket } from './client/net/CNetPacket';
 import { CNetLoginPacket } from './client/net/CNetLoginPacket';
 import { CNetLogoutPacket } from './client/net/CNetLogoutPacket';
 import { CPlayerPacket } from './client/player/CPlayerPacket';
 import { NetPacketHandler } from './handler/net/NetPacketHandler';
 import { PlayerPacketHandler } from './handler/player/PlayerPacketHandler';
-import { CNetPacket } from './client/net/CNetPacket';
 
 @WebSocketGateway({ cors: true })
 export class PacketGateway implements OnGatewayDisconnect {

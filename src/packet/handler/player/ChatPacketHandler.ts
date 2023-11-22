@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
 
-import { PacketService } from '@/packet/PacketService';
+import { PacketService } from '@/packet/packet.service';
 import { AbstractPacket } from '@/packet/AbstractPacket';
 import { CPlayerChatPacket } from '@/packet/client/player/CPlayerChatPacket';
 import { SPlayerChatPacket } from '@/packet/server/player/SPlayerChatPacket';

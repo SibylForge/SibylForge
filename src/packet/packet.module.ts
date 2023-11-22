@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { NetService } from '@/service/NetService';
-import { PlayerService } from '@/service/PlayerService';
+import { NetService } from '@/service/net.service';
+import { PlayerService } from '@/service/player.service';
 
-import { PacketGateway } from './PacketGateway';
-import { PacketService } from './PacketService';
+import { PacketGateway } from './packet.gateway';
+import { PacketService } from './packet.service';
 import { NetPacketHandler } from './handler/net/NetPacketHandler';
 import { LoginPacketHandler } from './handler/net/LoginPacketHandler';
 import { PlayerPacketHandler } from './handler/player/PlayerPacketHandler';

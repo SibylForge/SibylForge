@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { PacketModule } from '@/packet/PacketModule';
+import { PacketModule } from '@/packet/packet.module';
 
 @Module({
   imports: [

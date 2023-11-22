@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { io } from 'socket.io-client';
 import { expect } from 'chai';
 
-import { PacketModule } from '@/packet/PacketModule';
+import { PacketModule } from '@/packet/packet.module';
 import { SocketIoAdapter } from '@/packet/SocketIoAdapter';
 
 import { SocketClient } from './socket-client';
