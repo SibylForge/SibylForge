@@ -1,3 +1,9 @@
+## Preparation
+- Create jwt pub/private key and assign path @ `.env` file.
+	```
+	$ ssh-keygen -t rsa -b 2048 -f <private_key_path>
+	$ ssh-keygen -f <private_key_path> -e -m pem > public.pem
+	```
 
 ## ghcr.io images
 - [URL](https://github.com/SibylForge/SibylForge/pkgs/container/sibylforge)
