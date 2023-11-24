@@ -1,8 +1,8 @@
 ## Preparation
 - Create jwt pub/private key and assign path @ `.env` file.
 	```
-	$ ssh-keygen -t rsa -b 2048 -f <private_key_path>
-	$ ssh-keygen -f <private_key_path> -e -m pem > public.pem
+	$ openssl genpkey -algorithm RSA -out <private_key_path, should be a .pem file>
+	$ openssl rsa -pubout -in <private_key_path, should be a .pem file> -out <public_key_path, should be a .pem file>
 	```
 
 ## ghcr.io images

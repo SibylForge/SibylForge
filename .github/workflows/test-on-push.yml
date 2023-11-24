@@ -47,7 +47,7 @@ jobs:
       - name: Generate test key
         run: |
           openssl genpkey -algorithm RSA -out test_private_key.pem
-          openssl rsa -pubout -in testprivate_key.pem -out test_public_key.pem
+          openssl rsa -pubout -in test_private_key.pem -out test_public_key.pem
 
       - name: Unit Testing
         run: yarn run test --coverage

@@ -21,6 +21,7 @@ import { AuthController } from './auth.controller';
 					privateKey: readFileSync(privateKeyPath),
 					signOptions: {
 						expiresIn: '1h',
+						algorithm: 'RS256',
 					},
 				};
 			},
