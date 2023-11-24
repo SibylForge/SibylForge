@@ -44,16 +44,15 @@ jobs:
       - name: Output packages version
         run: yarn list
 
-      # - name: Unit Testing
-      #   run: yarn run test --coverage
+      - name: Unit Testing
+        run: yarn run test --coverage
 
-      # - name: Upload UnitTest coverage reports to Codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #     move_coverage_to_trash: true
-      #     name: unit
-      #     flags: unit
+      - name: Upload UnitTest coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          move_coverage_to_trash: true
+          name: unit
+          flags: unit
 
       - name: E2E Testing
         run: yarn run test:e2e --coverage --runInBand
