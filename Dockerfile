@@ -2,7 +2,6 @@ FROM node:18.18.2-alpine as builder
 WORKDIR /builder
 
 COPY src src
-COPY .env .
 COPY nest-cli.json .
 COPY tsconfig*.json .
 COPY package*.json .
