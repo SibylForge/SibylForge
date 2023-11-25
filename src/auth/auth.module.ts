@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import { Config } from '@/config';
 import { AuthController } from './auth.controller';
 
 @Module({
@@ -10,10 +11,7 @@ import { AuthController } from './auth.controller';
 	imports: [
 		JwtModule.registerAsync({
 			imports: [ConfigModule],
-			useFactory: async (configService: ConfigService<{
-				JWT_PUBLIC_KEY_PATH: string;
-				JWT_PRIVATE_KEY_PATH: string;
-			}>) => {
+			useFactory: async (configService: ConfigService<Config>) => {
 				const publicKeyPath = configService.getOrThrow('JWT_PUBLIC_KEY_PATH');
 				const privateKeyPath = configService.getOrThrow('JWT_PRIVATE_KEY_PATH');
 				return {

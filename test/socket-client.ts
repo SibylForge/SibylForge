@@ -1,3 +1,6 @@
+import * as request from 'supertest';
+import { INestApplication } from '@nestjs/common';
+
 import { CNetLoginPacket } from '@/packet/client/net/CNetLoginPacket';
 import { CNetLogoutPacket } from '@/packet/client/net/CNetLogoutPacket';
 import { CPlayerChatPacket } from '@/packet/client/player/CPlayerChatPacket';
@@ -33,6 +36,16 @@ export class SocketClient {
 				break;
 		}
 	}
+
+	loginHttp(app: INestApplication, data?: any) {
+		return request(app.getHttpServer())
+			.post('/auth/sign')
+			.send(data ?? {
+				account: 'account',
+				name: 'name',
+			})
+			.expect(201);
+	};
 
 	login(token: string) {
 		const data = JSON.stringify({
