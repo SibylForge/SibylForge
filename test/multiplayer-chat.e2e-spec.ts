@@ -1,14 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { io } from 'socket.io-client';
 import { expect } from 'chai';
 
 import { SocketClient } from './socket-client';
 import { Config } from '@/config';
+import { AppModule } from '@/app.module';
 import { SocketIoAdapter } from '@/packet/SocketIoAdapter';
-import { AuthModule } from '@/auth/auth.module';
-import { PacketModule } from '@/packet/packet.module';
 
 describe('Multiplayer Chat Test', () => {
   let app: INestApplication;
@@ -16,11 +15,7 @@ describe('Multiplayer Chat Test', () => {
 
   beforeEach(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
-			imports: [
-				ConfigModule.forRoot({ envFilePath: '.e2e.test.env' }),
-				PacketModule,
-				AuthModule
-			],
+			imports: [AppModule],
 		}).compile();
 
     app = moduleFixture.createNestApplication();
