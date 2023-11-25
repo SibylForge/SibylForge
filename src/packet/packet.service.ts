@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
-import { randomUUID } from 'crypto';
+import { SocketId } from 'socket.io-adapter';
 
 import { OnlinePlayer } from '@/entity/OnlinePlayer';
 
@@ -8,8 +8,7 @@ import { ServerPacket } from './server/ServerPacket';
 
 @Injectable()
 export class PacketService {
-	public uuid = randomUUID();
-	private connectedSockets: Record<string, OnlinePlayer> = {};
+	private connectedSockets: Record<SocketId, OnlinePlayer> = {};
 
 	public sendPacket(pkt: ServerPacket, socket: Socket): void {
 		const data = this.formPktName(
@@ -19,15 +18,15 @@ export class PacketService {
 		socket.emit('spkt', JSON.stringify(data));
 	}
 
-	public getConnectedSockets(): Record<string, OnlinePlayer> {
+	public getConnectedSockets(): Record<SocketId, OnlinePlayer> {
 		return this.connectedSockets;
 	}
 
-	public getOnlinePlayer(socketId: string): OnlinePlayer {
+	public getOnlinePlayer(socketId: SocketId): OnlinePlayer {
 		return this.connectedSockets[socketId];
 	}
 
-	public addOnlinePlayer(socketId: string, player: OnlinePlayer): void {
+	public addOnlinePlayer(socketId: SocketId, player: OnlinePlayer): void {
 		this.connectedSockets[socketId] = player;
 	}
 
@@ -36,7 +35,7 @@ export class PacketService {
 		// Recycle everything from main loop;
 	}
 
-	public isConnectedSocket(socketId: string): boolean {
+	public isConnectedSocket(socketId: SocketId): boolean {
 		return this.getOnlinePlayer(socketId) !== undefined;
 	}
 
