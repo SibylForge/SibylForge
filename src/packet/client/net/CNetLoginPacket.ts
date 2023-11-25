@@ -4,26 +4,19 @@ import { CNetPacket } from './CNetPacket';
 
 @Packet('net', 'cp-net-login')
 export class CNetLoginPacket extends CNetPacket {
-	private account: string;
-	private name: string;
+	private token: string;
 
-	constructor(account: string, name: string) {
+	constructor(token: string) {
 		super();
-		this.account = account;
-		this.name = name;
+		this.token = token;
 	}
 
-	public getAccount(): string {
-		return this.account;
-	}
-
-	public getName(): string {
-		return this.name;
+	public getToken(): string {
+		return this.token;
 	}
 
 	public extractPayload(): CNetLoginPacket {
-		this.account = this.payload['account'];
-		this.name = this.payload['name'];
+		this.token = this.payload['token'];
 
 		return this;
 	}

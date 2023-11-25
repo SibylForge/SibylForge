@@ -18,6 +18,10 @@ export class OnlinePlayer {
 		return this.id;
 	}
 
+	public getIdentity(): string {
+		return this.identity;
+	}
+
 	public getName(): string {
 		return this.name;
 	}
