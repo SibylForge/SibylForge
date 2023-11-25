@@ -6,9 +6,10 @@ import { expect } from 'chai';
 
 import { SocketClient } from './socket-client';
 import { Config } from '@/config';
-import { AppModule } from '@/app.module';
 import { SocketIoAdapter } from '@/packet/SocketIoAdapter';
 import { PacketService } from '@/packet/packet.service';
+import { PacketModule } from '@/packet/packet.module';
+import { AuthModule } from '@/auth/auth.module';
 
 describe('Multiplayer Connect Test', () => {
 	let app: INestApplication;
@@ -17,11 +18,12 @@ describe('Multiplayer Connect Test', () => {
 
 	beforeEach(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
-			imports: [AppModule],
-		})
-			.overrideProvider(ConfigModule)
-			.useValue(ConfigModule.forRoot({ envFilePath: '.e2e.test.env' }))
-			.compile();
+			imports: [
+				ConfigModule.forRoot({ envFilePath: '.e2e.test.env' }),
+				PacketModule,
+				AuthModule,
+			],
+		}).compile();
 
 		app = moduleFixture.createNestApplication();
 		configService = app.get(ConfigService);
