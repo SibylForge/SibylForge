@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { io } from 'socket.io-client';
 import { expect } from 'chai';
@@ -8,12 +8,14 @@ import { SocketClient } from './socket-client';
 import { Config } from '@/config';
 import { AppModule } from '@/app.module';
 import { SocketIoAdapter } from '@/packet/SocketIoAdapter';
+import { PacketService } from '@/packet/packet.service';
 
-describe('Multiplayer Chat Test', () => {
-  let app: INestApplication;
+describe('Multiplayer Connect Test', () => {
+	let app: INestApplication;
 	let configService: ConfigService<Config>;
+	let packetService: PacketService;
 
-  beforeEach(async () => {
+	beforeEach(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [AppModule],
 		})
@@ -21,20 +23,21 @@ describe('Multiplayer Chat Test', () => {
 			.useValue(ConfigModule.forRoot({ envFilePath: '.e2e.test.env' }))
 			.compile();
 
-    app = moduleFixture.createNestApplication();
+		app = moduleFixture.createNestApplication();
 		configService = app.get(ConfigService);
+		packetService = app.get(PacketService);
 		app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
 
-    await app.init();
-  });
+		await app.init();
+	});
 
-  afterEach(async () => {
-    await app.close();
-  });
+	afterEach(async () => {
+		await app.close();
+	});
 
-  it('Should allow multiple players to chat', async () => {
-    const numPlayers = 3;
-    const socketClients: Array<SocketClient> = [];
+	it('Should allow multiple players connect', async () => {
+		const numPlayers = 3;
+		const socketClients: Array<SocketClient> = [];
 
 		for (let i = 0; i < numPlayers; i++) {
 			const socket = io(`ws://127.0.0.1:${configService.get('WEBSOCKET_PORT')}`, {
@@ -42,7 +45,7 @@ describe('Multiplayer Chat Test', () => {
 				forceNew: true,
 			});
 			const socketClient = new SocketClient(socket);
-			const { body } = await socketClient.loginHttp(app, { account: `account_${i}`, name: `player {i}` });
+			const { body } = await socketClient.loginHttp(app, { account: `account ${i}`, name: `player {i}` });
 			const { token } = body;
 
 			socket.on('connect', () => {
@@ -52,23 +55,26 @@ describe('Multiplayer Chat Test', () => {
 		}
 
 		await new Promise((resolve) => setTimeout(resolve, 1000));
-		socketClients.forEach((each) => each.chat(`I'm ${each.name}`));
-		await new Promise((resolve) => setTimeout(resolve, 2000));
 
 		// Check lsit
-		const nameList = socketClients.map((each) => each.name);
+		let nameList = socketClients.map((each) => each.name);
 		socketClients.forEach((each) => {
 			expect(Object.values(each.list)).deep.equals(nameList);
 		});
 
-		// Check chat
-		const chatList = socketClients.map((each) => `I'm ${each.name}`);
+		const logoutClient = socketClients.pop();
+		logoutClient.logout();
+
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+
+		nameList = socketClients.map((each) => each.name)
 		socketClients.forEach((each) => {
-			expect(Object.values(each.readPackets)).deep.equals(chatList);
+			expect(Object.values(each.list)).deep.equals(nameList);
 		});
 
-		socketClients.forEach((each) => each.logout());
-
-		socketClients.forEach((each) => each.disconnect());
-  });
+		const serverConnectedSockets = packetService.getConnectedSockets();
+		const connectedSocketIds = Object.values(socketClients).map((each) => each.socket.id);
+		expect(Object.keys(serverConnectedSockets)).not.includes(logoutClient.socket.id);
+		expect(Object.keys(serverConnectedSockets)).deep.equals(connectedSocketIds);
+	});
 });
