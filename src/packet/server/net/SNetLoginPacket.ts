@@ -1,25 +1,29 @@
 import { Packet } from '@/packet/decorator/Packet';
+import { OnlinePlayer } from '@/entity/OnlinePlayer';
 
 import { ServerPacket } from '../ServerPacket';
 
 @Packet('net', 'sp-net-login')
 export class SNetLoginPacket extends ServerPacket {
 	private isSuccess = true;
+	private identity = ''
 	private uuid = '';
-	private identity = '';
+	private name = '';
 
-	constructor(isSuccess: boolean, uuid: string, identity: string) {
+	constructor(isSuccess: boolean, onlinePlayer: OnlinePlayer) {
 		super();
 		this.isSuccess = isSuccess;
-		this.uuid = uuid;
-		this.identity = identity;
+		this.identity = onlinePlayer.getIdentity();
+		this.uuid = onlinePlayer.getUUID();
+		this.name = onlinePlayer.getName();
 	}
 
 	public formPayload(): ServerPacket {
 		this.payload = {
 			is_success: this.isSuccess,
-			uuid: this.uuid,
 			identity: this.identity,
+			uuid: this.uuid,
+			name: this.name,
 		};
 		return this;
 	}

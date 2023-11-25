@@ -4,24 +4,24 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { io } from 'socket.io-client';
 import { expect } from 'chai';
 
-import { PacketModule } from '@/packet/packet.module';
-import { SocketIoAdapter } from '@/packet/SocketIoAdapter';
-
 import { SocketClient } from './socket-client';
+import { Config } from '@/config';
+import { SocketIoAdapter } from '@/packet/SocketIoAdapter';
+import { AuthModule } from '@/auth/auth.module';
+import { PacketModule } from '@/packet/packet.module';
 
 describe('Multiplayer Chat Test', () => {
   let app: INestApplication;
-	let configService: ConfigService<{
-		WEBSOCKET_PORT: number;
-	}>;
+	let configService: ConfigService<Config>;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [
-				ConfigModule.forRoot({ envFilePath: '.e2e.test.env'}),
+				ConfigModule.forRoot({ envFilePath: '.e2e.test.env' }),
 				PacketModule,
+				AuthModule
 			],
-    }).compile();
+		}).compile();
 
     app = moduleFixture.createNestApplication();
 		configService = app.get(ConfigService);
@@ -43,10 +43,12 @@ describe('Multiplayer Chat Test', () => {
 				reconnection: false,
 				forceNew: true,
 			});
-			const socketClient = new SocketClient(`player ${i}`, socket);
+			const socketClient = new SocketClient(socket);
+			const { body } = await socketClient.loginHttp(app, { account: `account_${i}`, name: `player {i}` });
+			const { token } = body;
 
 			socket.on('connect', () => {
-				socketClient.login();
+				socketClient.login(token);
 			});
 			socketClients.push(socketClient);
 		}

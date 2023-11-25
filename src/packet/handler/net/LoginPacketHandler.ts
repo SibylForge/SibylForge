@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Socket } from 'socket.io';
-import { randomUUID } from 'crypto';
 
 import { NetService } from '@/service/net.service';
 import { OnlinePlayer } from '@/entity/OnlinePlayer';
@@ -15,6 +15,7 @@ import { CNetLoginPacket } from '@/packet/client/net/CNetLoginPacket';
 @Injectable()
 export class LoginPacketHandler implements TrafficHandler {
 	constructor(
+		private readonly jwtService: JwtService,
 		private readonly packetService: PacketService,
 		private readonly netService: NetService,
 	) {}
@@ -25,11 +26,13 @@ export class LoginPacketHandler implements TrafficHandler {
 
 	handle(packet: AbstractPacket, socket: Socket): void {
 		const pkt = packet as CNetLoginPacket;
-		const identity = this.netService.generateIdentity(pkt.getAccount(), socket);;
-		const onlinePlayer = new OnlinePlayer(identity, pkt.getName(), socket);
+		const { account, name } = this.jwtService.decode<{ account: string; name: string; }>(pkt.getToken());
+
+		const identity = this.netService.generateIdentity(account, socket);;
+		const onlinePlayer = new OnlinePlayer(identity, name, socket);
 		this.packetService.addOnlinePlayer(socket.id, onlinePlayer);
 
-		const resPkt = new SNetLoginPacket(true, randomUUID(), identity);
+		const resPkt = new SNetLoginPacket(true, onlinePlayer);
 		this.packetService.sendPacket(resPkt, socket);
 		// Emit PlayerJoinEvent
 

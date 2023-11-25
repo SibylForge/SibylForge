@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import { NetService } from '@/service/net.service';
 import { PlayerService } from '@/service/player.service';
@@ -16,6 +17,7 @@ import { LogoutPacketHandler } from './handler/net/LogoutPacketHandler';
 		PacketGateway,
 		PacketService,
 		NetService,
+		JwtService,
 		PlayerService,
 
 		NetPacketHandler,

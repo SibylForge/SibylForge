@@ -1,3 +1,6 @@
+import * as request from 'supertest';
+import { INestApplication } from '@nestjs/common';
+
 import { CNetLoginPacket } from '@/packet/client/net/CNetLoginPacket';
 import { CNetLogoutPacket } from '@/packet/client/net/CNetLogoutPacket';
 import { CPlayerChatPacket } from '@/packet/client/player/CPlayerChatPacket';
@@ -8,13 +11,12 @@ import { SPlayerChatPacket } from '@/packet/server/player/SPlayerChatPacket';
 export class SocketClient {
 	public readPackets: Array<any> = [];
 	public list: any;
+
 	public uuid: string;
 	public identity: string;
+	public name: string;
 
-	constructor(
-		public readonly name: string,
-		public readonly socket: any,
-	) {
+	constructor(public readonly socket: any) {
 		socket.on('spkt', this.onSPacket.bind(this));
 	}
 
@@ -22,7 +24,9 @@ export class SocketClient {
 		const data = JSON.parse(packet) as any;
 		switch (data.pkt_name) {
 			case SNetLoginPacket.PKT_CONSTANT_NAME:
+				this.uuid = data.payload.uuid;
 				this.identity = data.payload.identity;
+				this.name = data.payload.name;
 				break;
 			case SNetListPacket.PKT_CONSTANT_NAME:
 				this.list = data.payload;
@@ -33,14 +37,21 @@ export class SocketClient {
 		}
 	}
 
-	login() {
+	loginHttp(app: INestApplication, data?: any) {
+		return request(app.getHttpServer())
+			.post('/auth/sign')
+			.send(data ?? {
+				account: 'account',
+				name: 'name',
+			})
+			.expect(201);
+	};
+
+	login(token: string) {
 		const data = JSON.stringify({
 			pkt_name: CNetLoginPacket.PKT_CONSTANT_NAME,
 			head: { serial: 1},
-			payload: {
-				name: this.name,
-				account: this.name,
-			},
+			payload: { token },
 		});
 		this.socket.emit('pkt-net', data);
 	}
