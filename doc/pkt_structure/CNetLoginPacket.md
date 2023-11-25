@@ -11,8 +11,7 @@
 | *head | Object |
 | *head.serial | Number | (目前隨意) | 封包序列號（暫定）|
 | *payload | Object |
-| *payload.account | String | 帳號 | (目前隨意)
-| *payload.name | String | 聊天室名稱 |
+| *payload.token | String| JWT token |
 *表示必要
 
 ### 回應結構
