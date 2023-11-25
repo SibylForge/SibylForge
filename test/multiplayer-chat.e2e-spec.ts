@@ -1,3 +1,4 @@
+import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,6 +9,17 @@ import { PacketModule } from '@/packet/packet.module';
 import { SocketIoAdapter } from '@/packet/SocketIoAdapter';
 
 import { SocketClient } from './socket-client';
+import { AuthModule } from '@/auth/auth.module';
+
+function loginHttp(app: INestApplication, data?: any) {
+	return request(app.getHttpServer())
+		.post('/auth/sign')
+		.send(data ?? {
+			account: 'account',
+			name: 'name',
+		})
+		.expect(201);
+};
 
 describe('Multiplayer Chat Test', () => {
   let app: INestApplication;
@@ -20,6 +32,7 @@ describe('Multiplayer Chat Test', () => {
 			imports: [
 				ConfigModule.forRoot({ envFilePath: '.e2e.test.env'}),
 				PacketModule,
+				AuthModule,
 			],
     }).compile();
 
@@ -27,6 +40,7 @@ describe('Multiplayer Chat Test', () => {
 		configService = app.get(ConfigService);
 		app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
 
+		app.getHttpServer()
     await app.init();
   });
 
@@ -39,14 +53,17 @@ describe('Multiplayer Chat Test', () => {
     const socketClients: Array<SocketClient> = [];
 
 		for (let i = 0; i < numPlayers; i++) {
+			const { body } = await loginHttp(app, { account: `account_${i}`, name: `player {i}` });
+			const { token } = body;
+
 			const socket = io(`ws://127.0.0.1:${configService.get('WEBSOCKET_PORT')}`, {
 				reconnection: false,
 				forceNew: true,
 			});
-			const socketClient = new SocketClient(`player ${i}`, socket);
+			const socketClient = new SocketClient(socket);
 
 			socket.on('connect', () => {
-				socketClient.login();
+				socketClient.login(token);
 			});
 			socketClients.push(socketClient);
 		}
