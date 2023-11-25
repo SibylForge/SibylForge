@@ -12,7 +12,7 @@ describe('AuthController', () => {
 	beforeAll(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [
-				ConfigModule.forRoot({ envFilePath: '.e2e.test.env'}),
+				ConfigModule.forRoot({ envFilePath: 'test.env'}),
 				AuthModule,
 			],
 		}).compile();
