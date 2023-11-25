@@ -12,8 +12,9 @@
 | head.serial | Number | (目前隨意) | 封包序列號（暫定）|
 | payload | Object |
 | payload.is_success | Boolean | 登入成功 |
-| payload.uuid | String | 使用者UUID |
 | payload.identity | String | Credential | 後續所有請求所需的Token |
+| payload.uuid | String | 使用者UUID |
+| payload.name | String | 使用者名稱 | 
 
 ## 相關
 - 請參考 [CNetLoginPacket](./CNetLoginPacket.md)
