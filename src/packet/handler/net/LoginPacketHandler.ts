@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Socket } from 'socket.io';
 
-import { NetService } from '@/service/net.service';
 import { OnlinePlayer } from '@/entity/OnlinePlayer';
 
 import { PacketService } from '@/packet/packet.service';
@@ -17,7 +16,6 @@ export class LoginPacketHandler implements TrafficHandler {
 	constructor(
 		private readonly jwtService: JwtService,
 		private readonly packetService: PacketService,
-		private readonly netService: NetService,
 	) {}
 
 	canHandle(pkt: AbstractPacket): boolean {
@@ -28,7 +26,7 @@ export class LoginPacketHandler implements TrafficHandler {
 		const pkt = packet as CNetLoginPacket;
 		const { account, name } = this.jwtService.decode<{ account: string; name: string; }>(pkt.getToken());
 
-		const identity = this.netService.generateIdentity(account, socket);;
+		const identity = this.packetService.generateIdentity(account, socket);;
 		const onlinePlayer = new OnlinePlayer(identity, name, socket);
 		this.packetService.addOnlinePlayer(socket.id, onlinePlayer);
 

@@ -39,6 +39,11 @@ export class PacketService {
 		return this.getOnlinePlayer(socketId) !== undefined;
 	}
 
+	public generateIdentity(account: string, socket: Socket): string {
+		const { address } = socket.handshake;
+		return `${socket.id}.${address}.${account}`;
+	}
+
 	public broadcast(pkt: ServerPacket): void {
 		Object.values(this.connectedSockets).forEach((onlinePlayer) => {
 			this.sendPacket(pkt, onlinePlayer.getSocket());

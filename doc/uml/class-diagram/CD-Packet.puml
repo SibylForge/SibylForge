@@ -117,7 +117,6 @@ namespace Packet {
 			class LoginPacketHandler implements .Packet.Handler.TrafficHandler {
 				constructor(\n\
 	packetService: PacketService,\n\
-	netService: NetService,\n\
 	)
 			}
 
