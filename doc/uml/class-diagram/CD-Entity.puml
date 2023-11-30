@@ -28,14 +28,14 @@ namespace Entity {
     }
 
 		class OnlinePlayer {
-			#id: UUID
+			#id: ULID
 			#identity: string
 			#name: string
 			#socket: Socket
 			+constructor(identity: string, name: string, socket: Socket)
-			+getUUID(): UUID
+			+getULID(): ULID
 			+getName(): string
-			+getUUID(): UUID
+			+getULID(): ULID
 			+isConnected(): boolean
 		}
 }

@@ -1,3 +1,3 @@
-import { ClientPacket } from '@/packet/client/ClientPacket';
+import { ClientPacket } from '@/application/shared/packet/ClientPacket';
 
 export abstract class CNetPacket extends ClientPacket {}

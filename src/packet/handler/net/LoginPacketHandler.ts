@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Socket } from 'socket.io';
 
-import { OnlinePlayer } from '@/entity/OnlinePlayer';
+import { TrafficHandler } from '@/application/shared/packet/TrafficHandler';
+import { AbstractPacket } from '@/application/shared/packet/AbstractPacket';
 
+import { OnlinePlayer } from '@/entity/OnlinePlayer';
 import { PacketService } from '@/packet/packet.service';
-import { TrafficHandler } from '@/packet/handler/TrafficHandler';
-import { AbstractPacket } from '@/packet/AbstractPacket';
 import { SNetLoginPacket } from '@/packet/server/net/SNetLoginPacket';
 import { SNetListPacket } from '@/packet/server/net/SNetListPacket';
 import { CNetLoginPacket } from '@/packet/client/net/CNetLoginPacket';

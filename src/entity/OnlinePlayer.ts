@@ -1,20 +1,20 @@
-import { UUID, randomUUID } from 'crypto';
+import { ULID, ulid } from 'ulidx';
 import { Socket } from 'socket.io';
 
 export class OnlinePlayer {
-	protected id: UUID;
+	protected id: ULID;
 	protected identity: string;
 	protected name: string;
 	protected socket: Socket;
 
 	constructor(identity: string, name: string, socket: Socket) {
-		this.id = randomUUID()
+		this.id = ulid()
 		this.identity = identity;
 		this.name = name;
 		this.socket = socket;
 	}
 
-	public getUUID(): UUID {
+	public getULID(): ULID {
 		return this.id;
 	}
 

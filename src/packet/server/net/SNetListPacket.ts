@@ -1,9 +1,11 @@
-import { Packet } from '@/packet/decorator/Packet';
+import { join } from 'path';
+
+import { Packet } from '@/application/shared/packet/decorator/Packet';
+import { ServerPacket } from '@/application/shared/packet/ServerPacket';
+
 import { OnlinePlayer } from '@/entity/OnlinePlayer';
 
-import { ServerPacket } from '../ServerPacket';
-
-@Packet('net', 'sp-net-list')
+@Packet('sp-net-list', join(__dirname, SNetListPacket.name))
 export class SNetListPacket extends ServerPacket {
 	private list: Record<string, OnlinePlayer>;
 
@@ -15,7 +17,7 @@ export class SNetListPacket extends ServerPacket {
 	public formPayload(): ServerPacket {
 		const data = {};
 		Object.values(this.list).forEach((value) => {
-			data[value.getUUID()] = value.getName();
+			data[value.getULID()] = value.getName();
 		});
 		this.payload = data;
 		return this;

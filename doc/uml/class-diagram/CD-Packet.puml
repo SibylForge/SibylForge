@@ -83,9 +83,9 @@ namespace Packet {
 
 			class SNetLoginPacket extends .Packet.Server.ServerPacket {
 				-isSuccess: boolean
-				-uuid: string
+				-id: string
 				- identity: string
-				+constructor(isSuccess: boolean, uuid: string, identity: string)
+				+constructor(isSuccess: boolean, id: string, identity: string)
 				+formPayload(): ServerPacket
 			}
 		}

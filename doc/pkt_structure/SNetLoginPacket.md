@@ -13,7 +13,7 @@
 | payload | Object |
 | payload.is_success | Boolean | 登入成功 |
 | payload.identity | String | Credential | 後續所有請求所需的Token |
-| payload.uuid | String | 使用者UUID |
+| payload.id | String | 使用者ID |
 | payload.name | String | 使用者名稱 | 
 
 ## 相關

@@ -1,7 +1,9 @@
-import { Packet } from '@/packet/decorator/Packet';
-import { ServerPacket } from '@/packet/server/ServerPacket';
+import { join } from 'path';
 
-@Packet('player', 'sp-player-chat')
+import { Packet } from '@/application/shared/packet/decorator/Packet';
+import { ServerPacket } from '@/application/shared/packet/ServerPacket';
+
+@Packet('sp-player-chat', join(__dirname, SPlayerChatPacket.name))
 export class SPlayerChatPacket extends ServerPacket {
 	private from: string;
 	private message: string;

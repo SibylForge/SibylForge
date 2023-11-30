@@ -1,20 +1,22 @@
-import { Packet } from '@/packet/decorator/Packet';
+import { join } from 'path';
+
+import { Packet } from '@/application/shared/packet/decorator/Packet';
+import { ServerPacket } from '@/application/shared/packet/ServerPacket';
+
 import { OnlinePlayer } from '@/entity/OnlinePlayer';
 
-import { ServerPacket } from '../ServerPacket';
-
-@Packet('net', 'sp-net-login')
+@Packet('sp-net-login', join(__dirname, SNetLoginPacket.name))
 export class SNetLoginPacket extends ServerPacket {
 	private isSuccess = true;
 	private identity = ''
-	private uuid = '';
+	private id = '';
 	private name = '';
 
 	constructor(isSuccess: boolean, onlinePlayer: OnlinePlayer) {
 		super();
 		this.isSuccess = isSuccess;
 		this.identity = onlinePlayer.getIdentity();
-		this.uuid = onlinePlayer.getUUID();
+		this.id = onlinePlayer.getULID();
 		this.name = onlinePlayer.getName();
 	}
 
@@ -22,7 +24,7 @@ export class SNetLoginPacket extends ServerPacket {
 		this.payload = {
 			is_success: this.isSuccess,
 			identity: this.identity,
-			uuid: this.uuid,
+			id: this.id,
 			name: this.name,
 		};
 		return this;

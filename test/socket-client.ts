@@ -6,13 +6,12 @@ import { CNetLogoutPacket } from '@/packet/client/net/CNetLogoutPacket';
 import { CPlayerChatPacket } from '@/packet/client/player/CPlayerChatPacket';
 import { SNetListPacket } from '@/packet/server/net/SNetListPacket';
 import { SNetLoginPacket } from '@/packet/server/net/SNetLoginPacket';
-import { SPlayerChatPacket } from '@/packet/server/player/SPlayerChatPacket';
 
 export class SocketClient {
 	public readPackets: Array<any> = [];
 	public list: any;
 
-	public uuid: string;
+	public id: string;
 	public identity: string;
 	public name: string;
 
@@ -24,14 +23,14 @@ export class SocketClient {
 		const data = JSON.parse(packet) as any;
 		switch (data.pkt_name) {
 			case SNetLoginPacket.PKT_CONSTANT_NAME:
-				this.uuid = data.payload.uuid;
+				this.id = data.payload.id;
 				this.identity = data.payload.identity;
 				this.name = data.payload.name;
 				break;
 			case SNetListPacket.PKT_CONSTANT_NAME:
 				this.list = data.payload;
 				break;
-			case SPlayerChatPacket.PKT_CONSTANT_NAME:
+			case 'sp-player-chat':
 				this.readPackets.push(data.payload.message);
 				break;
 		}
