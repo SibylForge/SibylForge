@@ -18,24 +18,31 @@
 		<div id="list"></div>
   </div>
 
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
   <script>
-    const socket = io('ws://127.0.0.1:8085');
+    const socket = io('ws://127.0.0.1:8080');
 		let list = {};
-		let uuid = '';
+		let id = '';
 		let identity = '';
 
-    function login() {
-      const username = document.getElementById('username').value;
+		async function loginHttp() {
+      const name = document.getElementById('username').value;
+			const { data } = await axios.post('http://127.0.0.1:3000/auth/sign', {
+				account: name, name,
+			});
+			const { token } = data;
+			return token;
+		}
+
+    async function login() {
+			const token = await loginHttp();
       socket.emit('pkt-net', JSON.stringify({
 				pkt_name: "cp-net-login",
 				head: {
 					serial: 12
 				},
-				payload: {
-					account: username,
-					name: username,
-				}
+				payload: { token },
 			}));
     }
 
@@ -74,9 +81,9 @@
 		}
 
 		function loginRes(data) {
-			uuid = data['payload']['uuid'];
+			id = data['payload']['id'];
 			identity = data['payload']['identity'];
-			sendMessageToChatBox(`Your UUID is ${uuid}`);
+			sendMessageToChatBox(`Your ID is ${id}`);
 		}
 
 		function chatRes(data) {

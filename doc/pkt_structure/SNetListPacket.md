@@ -11,4 +11,4 @@
 | head | Object |
 | head.serial | Number | (目前隨意) | 封包序列號（暫定）|
 | payload | Object |
-| payload.list | Map<String, String> | 以UUID String為Key, Player name為value |
+| payload.list | Map<String, String> | 以ULID String為Key, Player name為value |

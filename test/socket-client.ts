@@ -12,7 +12,7 @@ export class SocketClient {
 	public readPackets: Array<any> = [];
 	public list: any;
 
-	public uuid: string;
+	public id: string;
 	public identity: string;
 	public name: string;
 
@@ -24,7 +24,7 @@ export class SocketClient {
 		const data = JSON.parse(packet) as any;
 		switch (data.pkt_name) {
 			case SNetLoginPacket.PKT_CONSTANT_NAME:
-				this.uuid = data.payload.uuid;
+				this.id = data.payload.id;
 				this.identity = data.payload.identity;
 				this.name = data.payload.name;
 				break;

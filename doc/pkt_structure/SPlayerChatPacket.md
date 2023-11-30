@@ -11,7 +11,7 @@
 | head | Object |
 | head.serial | Number | (目前隨意) | 封包序列號（暫定）|
 | payload | Object |
-| payload.from | String | 發送聊天者UUID |
+| payload.from | String | 發送聊天者ID |
 | payload.message | String | 聊天訊息 |
 
 ## 相關

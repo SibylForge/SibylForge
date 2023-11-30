@@ -15,7 +15,7 @@ export class SNetListPacket extends ServerPacket {
 	public formPayload(): ServerPacket {
 		const data = {};
 		Object.values(this.list).forEach((value) => {
-			data[value.getUUID()] = value.getName();
+			data[value.getULID()] = value.getName();
 		});
 		this.payload = data;
 		return this;
