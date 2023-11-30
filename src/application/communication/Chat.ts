@@ -1,18 +1,55 @@
+import { Injectable } from '@nestjs/common';
 import { ulid } from 'ulidx';
+import { Socket } from 'socket.io';
 
 import { ApplicationService } from '@/application/ApplicationService';
+import { TrafficHandler } from '@/packet/handler/TrafficHandler';
+import { AbstractPacket } from '@/packet/AbstractPacket';
+import { SPlayerChatPacket } from '@/packet/server/player/SPlayerChatPacket';
+import { CPlayerChatPacket } from '@/packet/client/player/CPlayerChatPacket';
+import { PacketService } from '@/packet/packet.service';
 
+import { DomainEventPublisher } from '@/domain/DomainEventPublisher';
+import { Chatted } from '@/domain/communication/event/Chatted';
 import { Message } from '@/domain/communication/model/Message';
 import { ULID } from '@/domain/communication/model/ULID';
 import { Player } from '@/domain/communication/model/Player';
-import { DomainEventPublisher } from '@/domain/DomainEventPublisher';
 
 interface ChatInput {
 	fromId: string;
 	message: string;
 }
 
-export class Chat implements ApplicationService<ChatInput, {}> {
+@Injectable()
+export class Chat implements ApplicationService<ChatInput, {}>, TrafficHandler {
+	constructor(
+		private readonly packetService: PacketService,
+	) {
+		DomainEventPublisher.getInstance().register(Chatted.name, this.handleEvent.bind(this));
+	}
+
+	canHandle(pkt: AbstractPacket): boolean {
+		return pkt instanceof CPlayerChatPacket;
+	}
+
+	handle(packet: AbstractPacket, socket: Socket): void {
+		const fromOnlinePlayer = this.packetService.getOnlinePlayer(socket.id);
+		const pkt = packet as CPlayerChatPacket;
+		this.execute({
+			fromId: fromOnlinePlayer.getULID(),
+			message: pkt.getMessage(),
+		});
+	}
+
+	handleEvent(event: Chatted): void {
+		const message = event.getMessage();
+		const from = message.getFrom().getId();
+		const content = message.getContent();
+
+		const resPkt = new SPlayerChatPacket(from, content);
+		this.packetService.broadcast(resPkt);
+	}
+
 	execute(input: ChatInput): Promise<{}> {
 		try {
 			const [error, message] = Message.createMessage({

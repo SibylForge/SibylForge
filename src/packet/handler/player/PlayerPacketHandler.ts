@@ -5,17 +5,17 @@ import { AbstractPacket } from '@/packet/AbstractPacket';
 import { CPlayerPacket } from '@/packet/client/player/CPlayerPacket';
 import { TrafficHandler } from '@/packet/handler/TrafficHandler';
 
-import { ChatPacketHandler } from './ChatPacketHandler';
+import { Chat } from '@/application/communication/Chat';
 
 @Injectable()
 export class PlayerPacketHandler implements TrafficHandler {
 	private handlers: Array<TrafficHandler> = [];
 
 	constructor(
-		private readonly chatPacketHandler: ChatPacketHandler,
+		private readonly chat: Chat,
 	) {
 		this.handlers = [
-			chatPacketHandler,
+			chat,
 		];
 	}
 
