@@ -1,4 +1,4 @@
-import { AggregateRoot } from '@/domain/AggregateRoot';
+import { AggregateRoot } from '@/domain/shared/AggregateRoot';
 
 import { Player } from './Player';
 import { ULID } from './ULID';

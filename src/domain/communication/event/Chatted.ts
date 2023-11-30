@@ -1,4 +1,4 @@
-import { DomainEvent } from '@/domain/DomainEvent';
+import { DomainEvent } from '@/domain/shared/DomainEvent';
 
 import { Message } from '../model/Message';
 

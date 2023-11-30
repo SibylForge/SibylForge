@@ -1,6 +1,6 @@
 import { isValid } from 'ulidx';
 
-import { EntityId } from '@/domain/EntityId';
+import { EntityId } from '@/domain/shared/EntityId';
 
 export class ULID extends EntityId<string> {
 	constructor(id: string) {

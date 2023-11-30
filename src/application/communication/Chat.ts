@@ -3,17 +3,18 @@ import { ulid } from 'ulidx';
 import { Socket } from 'socket.io';
 
 import { ApplicationService } from '@/application/ApplicationService';
-import { TrafficHandler } from '@/packet/handler/TrafficHandler';
-import { AbstractPacket } from '@/packet/AbstractPacket';
-import { SPlayerChatPacket } from '@/packet/server/player/SPlayerChatPacket';
-import { CPlayerChatPacket } from '@/packet/client/player/CPlayerChatPacket';
-import { PacketService } from '@/packet/packet.service';
+import { TrafficHandler } from '@/application/shared/packet/TrafficHandler';
 
-import { DomainEventPublisher } from '@/domain/DomainEventPublisher';
+import { DomainEventPublisher } from '@/domain/shared/DomainEventPublisher';
 import { Chatted } from '@/domain/communication/event/Chatted';
 import { Message } from '@/domain/communication/model/Message';
 import { ULID } from '@/domain/communication/model/ULID';
 import { Player } from '@/domain/communication/model/Player';
+
+import { AbstractPacket } from '@/packet/AbstractPacket';
+import { SPlayerChatPacket } from '@/packet/server/player/SPlayerChatPacket';
+import { CPlayerChatPacket } from '@/packet/client/player/CPlayerChatPacket';
+import { PacketService } from '@/packet/packet.service';
 
 interface ChatInput {
 	fromId: string;

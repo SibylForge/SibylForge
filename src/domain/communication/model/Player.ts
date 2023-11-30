@@ -1,4 +1,4 @@
-import { ValueObject } from '@/domain/ValueObject';
+import { ValueObject } from '@/domain/shared/ValueObject';
 
 import { ULID } from './ULID';
 
