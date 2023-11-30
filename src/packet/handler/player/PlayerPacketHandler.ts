@@ -2,20 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
 
 import { TrafficHandler } from '@/application/shared/packet/TrafficHandler';
-import { Chat } from '@/application/communication/Chat';
 
 import { AbstractPacket } from '@/packet/AbstractPacket';
 import { CPlayerPacket } from '@/packet/client/player/CPlayerPacket';
+
+import { ChatPacketHandler } from './ChatPacketHandler';
 
 @Injectable()
 export class PlayerPacketHandler implements TrafficHandler {
 	private handlers: Array<TrafficHandler> = [];
 
 	constructor(
-		private readonly chat: Chat,
+		private readonly chatPacketHandler: ChatPacketHandler,
 	) {
 		this.handlers = [
-			chat,
+			chatPacketHandler,
 		];
 	}
 
