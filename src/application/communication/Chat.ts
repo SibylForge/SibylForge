@@ -8,8 +8,7 @@ import { Chatted } from '@/domain/communication/event/Chatted';
 import { Message } from '@/domain/communication/model/Message';
 import { ULID } from '@/domain/communication/model/ULID';
 import { Player } from '@/domain/communication/model/Player';
-
-import { SPlayerChatPacket } from '@/packet/server/player/SPlayerChatPacket';
+import { Mapper } from '@/domain/communication/infrastructure/Mapper';
 
 interface ChatInput {
 	fromId: string;
@@ -25,10 +24,7 @@ export class Chat implements ApplicationService<ChatInput, {}> {
 
 	handleEvent(event: Chatted): void {
 		const message = event.getMessage();
-		const from = message.getFrom().getId();
-		const content = message.getContent();
-
-		const resPkt = new SPlayerChatPacket(from, content);
+		const resPkt = new Mapper().toServerPacket(message);
 		this.projector.sendAll(resPkt);
 	}
 

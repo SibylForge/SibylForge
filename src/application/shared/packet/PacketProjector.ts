@@ -1,5 +1,5 @@
 export interface PacketProjector {
-	send(pkt: any, targetId: string): void;
+	send(pkt: object, targetId: string): void;
 
-	sendAll(pkt: any): void;
+	sendAll(pkt: object): void;
 }

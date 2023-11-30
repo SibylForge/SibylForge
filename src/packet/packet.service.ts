@@ -14,20 +14,20 @@ export class PacketService implements PacketProjector {
 	private connectedSockets: Record<SocketId, OnlinePlayer> = {};
 	private onlinePlayers: Record<ULID, OnlinePlayer> = {};
 
-	send(pkt: any, targetId: string): void {
+	send(pkt: object, targetId: string): void {
 		const player = this.getOnlinePlayerByUlid(targetId);
-		this.sendPacket(pkt, player.getSocket());
+		this.sendPacket(pkt as ServerPacket, player.getSocket());
 	}
 
-	sendAll(pkt: any): void {
-		this.broadcast(pkt);
+	sendAll(pkt: object): void {
+		this.broadcast(pkt as ServerPacket);
 	}
 
-	public sendPacket(pkt: ServerPacket, socket: Socket): void {
-		const data = this.formPktName(
+	public sendPacket(pkt: ServerPacket | object, socket: Socket): void {
+		const data = pkt instanceof ServerPacket ? this.formPktName(
 			pkt.formPayload().formHead(),
 			pkt,
-		);
+		) : pkt;
 		socket.emit('spkt', JSON.stringify(data));
 	}
 

@@ -6,7 +6,6 @@ import { CNetLogoutPacket } from '@/packet/client/net/CNetLogoutPacket';
 import { CPlayerChatPacket } from '@/packet/client/player/CPlayerChatPacket';
 import { SNetListPacket } from '@/packet/server/net/SNetListPacket';
 import { SNetLoginPacket } from '@/packet/server/net/SNetLoginPacket';
-import { SPlayerChatPacket } from '@/packet/server/player/SPlayerChatPacket';
 
 export class SocketClient {
 	public readPackets: Array<any> = [];
@@ -31,7 +30,7 @@ export class SocketClient {
 			case SNetListPacket.PKT_CONSTANT_NAME:
 				this.list = data.payload;
 				break;
-			case SPlayerChatPacket.PKT_CONSTANT_NAME:
+			case 'sp-player-chat':
 				this.readPackets.push(data.payload.message);
 				break;
 		}
