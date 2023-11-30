@@ -1,4 +1,4 @@
-import { AbstractPacket } from '@/packet/AbstractPacket';
+import { AbstractPacket } from '@/application/shared/packet/AbstractPacket';
 
 export abstract class ClientPacket extends AbstractPacket {
 	protected identity: string;

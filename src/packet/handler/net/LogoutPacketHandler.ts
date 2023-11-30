@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
 
 import { TrafficHandler } from '@/application/shared/packet/TrafficHandler';
+import { AbstractPacket } from '@/application/shared/packet/AbstractPacket';
 
 import { PacketService } from '@/packet/packet.service';
-import { AbstractPacket } from '@/packet/AbstractPacket';
 import { CNetLogoutPacket } from '@/packet/client/net/CNetLogoutPacket';
 import { SNetListPacket } from '@/packet/server/net/SNetListPacket';
 

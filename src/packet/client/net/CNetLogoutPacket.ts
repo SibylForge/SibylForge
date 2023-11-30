@@ -1,8 +1,10 @@
-import { Packet } from '@/packet/decorator/Packet';
+import { join } from 'path';
+
+import { Packet } from '@/application/shared/packet/decorator/Packet';
 
 import { CNetPacket } from './CNetPacket';
 
-@Packet('net', 'cp-net-logout')
+@Packet('cp-net-logout', join(__dirname, CNetLogoutPacket.name))
 export class CNetLogoutPacket extends CNetPacket {
 	extractPayload(): CNetLogoutPacket {
 		return this;

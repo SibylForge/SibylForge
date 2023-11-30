@@ -1,8 +1,10 @@
-import { Packet } from '@/packet/decorator/Packet';
+import { join } from 'path';
+
+import { Packet } from '@/application/shared/packet/decorator/Packet';
 
 import { CPlayerPacket } from './CPlayerPacket';
 
-@Packet('player', 'cp-player-chat')
+@Packet('cp-player-chat', join(__dirname, CPlayerChatPacket.name))
 export class CPlayerChatPacket extends CPlayerPacket {
 	private message: string;
 

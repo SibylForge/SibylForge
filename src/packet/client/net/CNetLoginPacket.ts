@@ -1,8 +1,10 @@
-import { Packet } from '@/packet/decorator/Packet';
+import { join } from 'path';
+
+import { Packet } from '@/application/shared/packet/decorator/Packet';
 
 import { CNetPacket } from './CNetPacket';
 
-@Packet('net', 'cp-net-login')
+@Packet('cp-net-login', join(__dirname, CNetLoginPacket.name))
 export class CNetLoginPacket extends CNetPacket {
 	private token: string;
 

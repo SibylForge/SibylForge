@@ -1,9 +1,11 @@
-import { Packet } from '@/packet/decorator/Packet';
+import { join } from 'path';
+
+import { Packet } from '@/application/shared/packet/decorator/Packet';
+import { ServerPacket } from '@/application/shared/packet/ServerPacket';
+
 import { OnlinePlayer } from '@/entity/OnlinePlayer';
 
-import { ServerPacket } from '../ServerPacket';
-
-@Packet('net', 'sp-net-login')
+@Packet('sp-net-login', join(__dirname, SNetLoginPacket.name))
 export class SNetLoginPacket extends ServerPacket {
 	private isSuccess = true;
 	private identity = ''

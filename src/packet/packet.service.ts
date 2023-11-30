@@ -4,10 +4,9 @@ import { Socket } from 'socket.io';
 import { SocketId } from 'socket.io-adapter';
 
 import { PacketProjector } from '@/application/shared/packet/PacketProjector';
+import { ServerPacket } from '@/application/shared/packet/ServerPacket';
 
 import { OnlinePlayer } from '@/entity/OnlinePlayer';
-
-import { ServerPacket } from './server/ServerPacket';
 
 @Injectable()
 export class PacketService implements PacketProjector {

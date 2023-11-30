@@ -8,9 +8,10 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
+import { AbstractPacket } from '@/application/shared/packet/AbstractPacket';
+import { ClientPacket } from '@/application/shared/packet/ClientPacket';
+
 import { PacketService } from './packet.service';
-import { AbstractPacket } from './AbstractPacket';
-import { ClientPacket } from './client/ClientPacket';
 import { CNetPacket } from './client/net/CNetPacket';
 import { CNetLoginPacket } from './client/net/CNetLoginPacket';
 import { CNetLogoutPacket } from './client/net/CNetLogoutPacket';

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
 
 import { TrafficHandler } from '@/application/shared/packet/TrafficHandler';
+import { AbstractPacket } from '@/application/shared/packet/AbstractPacket';
 
-import { AbstractPacket } from '@/packet/AbstractPacket';
 import { CPlayerPacket } from '@/packet/client/player/CPlayerPacket';
 
 import { ChatPacketHandler } from './ChatPacketHandler';

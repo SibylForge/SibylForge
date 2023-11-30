@@ -3,9 +3,9 @@ import { Socket } from 'socket.io';
 
 import { Chat } from '@/application/communication/Chat';
 import { TrafficHandler } from '@/application/shared/packet/TrafficHandler';
+import { AbstractPacket } from '@/application/shared/packet/AbstractPacket';
 
 import { PacketService } from '@/packet/packet.service';
-import { AbstractPacket } from '@/packet/AbstractPacket';
 import { CPlayerChatPacket } from '@/packet/client/player/CPlayerChatPacket';
 
 @Injectable()
