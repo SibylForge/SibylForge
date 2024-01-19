@@ -1,4 +1,4 @@
-FROM node:18.18.2-alpine as builder
+FROM node:18.18.2-alpine AS builder
 WORKDIR /builder
 
 COPY src src

@@ -75,11 +75,10 @@ export class PacketGateway implements OnGatewayDisconnect {
 	private pktShouldQuickAbort(pkt: AbstractPacket, socket: Socket): boolean {
 		let abortFlag = false;
 		const isSocketInList = this.packetService.isConnectedSocket(socket.id);
-		if (pkt instanceof CPlayerPacket && !isSocketInList) {
-			return true;
-		} else if (pkt instanceof CNetLoginPacket && isSocketInList) {
-			return true;
-		} else if (pkt instanceof CNetLogoutPacket && !isSocketInList) {
+		if (pkt instanceof CPlayerPacket && !isSocketInList
+			|| (pkt instanceof CNetLoginPacket && isSocketInList)
+			|| (pkt instanceof CNetLogoutPacket && !isSocketInList)
+		) {
 			return true;
 		}
 		return abortFlag;

@@ -21,7 +21,7 @@ export class SocketClient {
 	}
 
 	onSPacket(packet: any): void {;
-		const data = JSON.parse(packet) as any;
+		const data = JSON.parse(packet);
 		switch (data.pkt_name) {
 			case SNetLoginPacket.PKT_CONSTANT_NAME:
 				this.uuid = data.payload.uuid;
