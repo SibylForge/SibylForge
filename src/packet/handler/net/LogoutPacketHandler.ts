@@ -18,8 +18,6 @@ export class LogoutPacketHandler implements TrafficHandler {
 	}
 
 	handle(packet: AbstractPacket, socket: Socket): void {
-		const isConnected = this.packetService.isConnectedSocket(socket.id);
-
 		this.packetService.removeOnlinePlayer(socket.id);
 		// Emit PlayerLeaveEvent
 

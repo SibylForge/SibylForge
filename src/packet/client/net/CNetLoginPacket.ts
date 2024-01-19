@@ -15,7 +15,7 @@ export class CNetLoginPacket extends CNetPacket {
 		return this.token;
 	}
 
-	public extractPayload(): CNetLoginPacket {
+	public extractPayload(): this {
 		this.token = this.payload['token'];
 
 		return this;

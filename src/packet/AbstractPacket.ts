@@ -17,7 +17,7 @@ export abstract class AbstractPacket {
 		return Reflect.hasMetadata('IS_SENSITIVE', clazz) && Reflect.getMetadata('IS_SENSITIVE', clazz);
 	}
 
-	public freeze(keys?: (keyof AbstractPacket)[]): AbstractPacket {
+	public freeze(keys?: (keyof AbstractPacket)[]): this {
 		if (keys) {
 			keys.forEach(key => Object.freeze(this[key]));
 		} else {

@@ -4,7 +4,7 @@ import { CNetPacket } from './CNetPacket';
 
 @Packet('net', 'cp-net-logout')
 export class CNetLogoutPacket extends CNetPacket {
-	extractPayload(): CNetLogoutPacket {
+	extractPayload(): this {
 		return this;
 	}
 }
