@@ -10,7 +10,7 @@ export class CPlayerChatPacket extends CPlayerPacket {
 		return this.message;
 	}
 
-	extractPayload(): CPlayerChatPacket {
+	extractPayload(): this {
 		this.message = this.payload.message;
 		return this;
 	}
